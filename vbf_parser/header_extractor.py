@@ -1,5 +1,5 @@
-import re
 import io
+import re
 from typing import TextIO
 
 

@@ -1,4 +1,5 @@
 import pathlib
+
 from setuptools import setup
 
 # The directory containing this file
@@ -24,5 +25,5 @@ setup(
         "Programming Language :: Python :: 3.7",
     ],
     packages=["vbf_parser"],
-    include_package_data=True
+    include_package_data=True,
 )

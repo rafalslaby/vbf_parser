@@ -17,9 +17,9 @@ def _jsonify_vbf_part(vbf_string: str) -> str:
 
 def _iter_quoted_strings(str_: str):
     yield from re.finditer(r'"[^"]*"', str_)
+
+
 # TODO: all values are treated as strings, you might want to interpret hashes as integers
-
-
 def parse_vbf_header(header: str) -> dict:
     """
     >>> parse_vbf_header('abc = 10; z = "a b"; y = {1,{2,3}  };')
@@ -35,6 +35,6 @@ def parse_vbf_header(header: str) -> dict:
         last_quote_end_index = quoted_string.end()
     json_string += _jsonify_vbf_part(header[last_quote_end_index:])
     json_string = json_string.rstrip()
-    assert json_string[-1] == ',', f"Expected ',' at the end; got {json_string[-1]}"
+    assert json_string[-1] == ",", f"Expected ',' at the end; got {json_string[-1]}"
     json_string = json_string[:-1] + "}"
     return json.loads(json_string)
