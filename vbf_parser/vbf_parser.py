@@ -169,6 +169,6 @@ def parse_vbf_tokens(tokens: List[str]):
             value, semicolon, *tokens = tokens
             if value.startswith("0x"):
                 value = int(value, base=16)
-        assert semicolon == ";", f"Syntax error: expected ';' got {semicolon}"
+        assert semicolon == ";", f"Syntax error: expected ';' got {semicolon}; before: {''.join(tokens)}"
         result[name] = value
     return result
