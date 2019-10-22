@@ -154,6 +154,10 @@ def parse_vbf_tokens(tokens: List[str]):
     >>> parse_vbf_tokens(tokens)
     {'x': '10', 'yz': ['1', ['2', '3']]}
 
+    >>> tokens = lex_vbf_header('x = 0xff;')
+    >>> parse_vbf_tokens(tokens)
+    {'x': 255}
+
     """
     result = {}
     while tokens:
@@ -163,6 +167,8 @@ def parse_vbf_tokens(tokens: List[str]):
             value, (semicolon, *tokens) = _parse_array(tokens[1:])
         else:
             value, semicolon, *tokens = tokens
+            if value.startswith("0x"):
+                value = int(value, base=16)
         assert semicolon == ";", f"Syntax error: expected ';' got {semicolon}"
         result[name] = value
     return result
