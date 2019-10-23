@@ -87,6 +87,7 @@ def lex_whitespace(header: str) -> Tuple[str, str]:
     return "", header[1:]
 
 
+# TODO: add comment support
 def lex_vbf_header(header: str) -> List[str]:
     """
     >>> lex_vbf_header('x = "ab"')
