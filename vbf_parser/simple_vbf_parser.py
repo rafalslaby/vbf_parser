@@ -28,9 +28,21 @@ def _remove_slash_comments(string: str) -> str:
     return re.sub(r"//.*", "", string)
 
 
+def _convert_all_hexes_to_ints(vbf_string: str) -> str:
+    """
+    >>> _convert_all_hexes_to_ints('abc 0xff def 0XF')
+    'abc 255 def 15'
+    """
+    def hex_match_to_int_str(match: Match) -> str:
+        return str(int(match.group(0), base=16))
+
+    return re.sub(r"(?i)0x[0-9-a-f]+", hex_match_to_int_str, vbf_string)
+
+
 def _jsonify_vbf_part(vbf_string: str) -> str:
     jsonified = _remove_asterisk_comments(vbf_string)
     jsonified = _remove_slash_comments(jsonified)
+    jsonified = _convert_all_hexes_to_ints(jsonified)
     jsonified = _fix_missing_quotes(jsonified)
     for source, replacement in VBF_TO_JSON_REPLACEMENTS.items():
         jsonified = jsonified.replace(source, replacement)
@@ -46,20 +58,19 @@ def _iter_quoted(str_: str) -> Generator[Match, None, None]:
     yield from re.finditer(r'"[^"]*"', str_)
 
 
-# TODO: all values are treated as strings, you might want to interpret hashes as integers
 def jsonify_vbf_header(header: str) -> str:
     """
     >>> from json import loads
-    >>> loads(jsonify_vbf_header('abc = 10; //comment \\n z = "a b"; /* multi\\nline*/ y = {1,{2,3}  };'))
-    {'abc': '10', 'z': 'a b', 'y': ['1', ['2', '3']]}
+    >>> loads(jsonify_vbf_header('abc = 0xff; //comment \\n z = "a b"; /* multi\\nline*/ y = {1,{2,3}  };'))
+    {'abc': '255', 'z': 'a b', 'y': ['1', ['2', '3']]}
     """
     json_string = "{"
     last_quote_end_index = 0
-    for quoted_string in _iter_quoted(header):
-        unquoted_part = header[last_quote_end_index : quoted_string.start()]
+    for quoted_match in _iter_quoted(header):
+        unquoted_part = header[last_quote_end_index : quoted_match.start()]
         jsonified = _jsonify_vbf_part(unquoted_part)
-        json_string += jsonified + quoted_string.group(0)
-        last_quote_end_index = quoted_string.end()
+        json_string += jsonified + quoted_match.group(0)
+        last_quote_end_index = quoted_match.end()
     json_string += _jsonify_vbf_part(header[last_quote_end_index:])
     json_string = json_string.rstrip()
     assert json_string[-1] == ",", f"Expected ',' at the end; got {json_string[-1]}"
