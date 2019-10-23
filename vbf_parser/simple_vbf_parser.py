@@ -1,4 +1,5 @@
 import re
+from typing import Generator, Match
 
 VBF_TO_JSON_REPLACEMENTS = {";": ",", "{": "[", "}": "]", "=": ":"}
 
@@ -36,7 +37,12 @@ def _jsonify_vbf_part(vbf_string: str) -> str:
     return jsonified
 
 
-def _iter_quoted_strings(str_: str):
+def _iter_quoted(str_: str) -> Generator[Match, None, None]:
+    """
+    >>> [match.group(0) for match in _iter_quoted('trash"str1" trash " str2"trash')]
+    ['"str1"', '" str2"']
+
+    """
     yield from re.finditer(r'"[^"]*"', str_)
 
 
@@ -49,7 +55,7 @@ def jsonify_vbf_header(header: str) -> str:
     """
     json_string = "{"
     last_quote_end_index = 0
-    for quoted_string in _iter_quoted_strings(header):
+    for quoted_string in _iter_quoted(header):
         unquoted_part = header[last_quote_end_index : quoted_string.start()]
         jsonified = _jsonify_vbf_part(unquoted_part)
         json_string += jsonified + quoted_string.group(0)
