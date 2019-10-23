@@ -14,20 +14,21 @@ pip install vbf-parser
 
 ## Usage
 
-Simple parsing with converting to json in between:
+Simple parsing with converting to json:
 
 ```python
 import json
 from vbf_parser import extract_header_body, jsonify_vbf_header
-with open("file.vbf") as file:
+with open("file.vbf", "rb") as file:
     header_body = extract_header_body(file)
 vbf = json.loads(jsonify_vbf_header(header_body))
 ```
 
+#### Work in progress:
 Proper lexing and manual parsing:
 ```python
 from vbf_parser import extract_header_body, lex_vbf_header, parse_vbf_tokens
-with open("file.vbf") as file:
+with open("file.vbf", "rb") as file:
     header_body = extract_header_body(file)
 vbf = parse_vbf_tokens(lex_vbf_header(header_body))
 ```
