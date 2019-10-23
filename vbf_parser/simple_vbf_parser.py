@@ -20,9 +20,10 @@ def _iter_quoted_strings(str_: str):
 
 
 # TODO: all values are treated as strings, you might want to interpret hashes as integers
-def parse_vbf_header(header: str) -> dict:
+def jsonify_vbf_header(header: str) -> str:
     """
-    >>> parse_vbf_header('abc = 10; z = "a b"; y = {1,{2,3}  };')
+    >>> from json import loads
+    >>> loads(jsonify_vbf_header('abc = 10; z = "a b"; y = {1,{2,3}  };'))
     {'abc': '10', 'z': 'a b', 'y': ['1', ['2', '3']]}
 
     """
@@ -36,5 +37,4 @@ def parse_vbf_header(header: str) -> dict:
     json_string += _jsonify_vbf_part(header[last_quote_end_index:])
     json_string = json_string.rstrip()
     assert json_string[-1] == ",", f"Expected ',' at the end; got {json_string[-1]}"
-    json_string = json_string[:-1] + "}"
-    return json.loads(json_string)
+    return json_string[:-1] + "}"
