@@ -1,20 +1,22 @@
 import io
 import re
-from typing import Pattern, TextIO, Union
+from typing import Pattern, Union, BinaryIO
+
+VBF_ENCODING = "ascii"
 
 
-def _read_until(fp: TextIO, pattern: Union[Pattern, str]) -> bool:
+def _read_until(fp: BinaryIO, pattern: Union[Pattern, str]) -> bool:
     """
-    >>> file = io.StringIO("abc; header {spanish inquisition")
-    >>> _read_until(file, r"header\s*{")
+    >>> file = io.BytesIO("abc; header {spanish inquisition".encode(VBF_ENCODING))
+    >>> _read_until(file, r'header\\s*{')
     True
-    >>> file.read()
+    >>> file.read().decode(VBF_ENCODING)
     'spanish inquisition'
 
     """
     text = ""
     while not re.search(pattern, text):
-        c = fp.read(1)
+        c = fp.read(1).decode(VBF_ENCODING)
         if not c:
             break
         text += c
@@ -23,22 +25,22 @@ def _read_until(fp: TextIO, pattern: Union[Pattern, str]) -> bool:
     return False
 
 
-def extract_header_body(fp: TextIO) -> str:
+def extract_header_body(fp: BinaryIO) -> str:
     """
     >>> header = 'trash;\\n header{\\n x=10;\\n} trash'
-    >>> extract_header_body(io.StringIO(header)).strip()
+    >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x=10;'
 
     >>> header = 'trash; header{ x=10;} trash'
-    >>> extract_header_body(io.StringIO(header)).strip()
+    >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x=10;'
 
     >>> header = 'header{\\n x = 10; z = {1,{2,3}};}'
-    >>> extract_header_body(io.StringIO(header)).strip()
+    >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x = 10; z = {1,{2,3}};'
 
     >>> header = 'header{\\n x = 10; z = {1,{2,3}};} trash'
-    >>> extract_header_body(io.StringIO(header)).strip()
+    >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x = 10; z = {1,{2,3}};'
 
     """
@@ -47,7 +49,7 @@ def extract_header_body(fp: TextIO) -> str:
     header = []
     is_in_quotes = False
     while nested_level != 0:
-        char = fp.read(1)
+        char = fp.read(1).decode(VBF_ENCODING)
         if char == "":
             raise ValueError("Reached file end before header was closed")
         header.append(char)
