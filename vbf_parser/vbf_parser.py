@@ -108,26 +108,6 @@ def lex_vbf_header(header: str) -> List[str]:
     return tokens
 
 
-# TODO: probably to be removed
-def parse_vbf_header_tokens_(tokens: List[str]):
-    """
-    >>> tokens = ['y', '=', '{', '{', '1', ',', '2', '}', ',', '3', '}', ';', 'abc', '=', '0x12', ';']
-    >>> parse_vbf_header_tokens_(tokens)
-    {'y': [['1', '2'], '3'], 'abc': '0x12'}
-    """
-    json_tokens = ["{"]
-    replacements = {";": ",", "{": "[", "}": "]", "=": ":"}
-    for token in tokens:
-        if token in replacements:
-            json_tokens.append(replacements[token])
-        elif token not in VBF_SYNTAX:
-            json_tokens.append(f'"{token}"')
-        else:
-            json_tokens.append(token)
-    json_tokens[-1] = "}"
-    return json.loads("".join(json_tokens))
-
-
 def _parse_array(tokens: List[str]) -> Tuple[Union[list, str], List[str]]:
     """
     >>> _parse_array(list("1,{2,3}};abc"))
