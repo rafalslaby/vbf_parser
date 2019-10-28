@@ -5,7 +5,7 @@ python:
   - "3.8"
 install:
   - pip install -r requirements.txt
-  - pip install pytest coverage mypy
+  - pip install pytest coverage mypy black
 script:
   - coverage run -m pytest --doctest-modules
   - mypy vbf_parser
