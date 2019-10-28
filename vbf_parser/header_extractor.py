@@ -43,6 +43,15 @@ def extract_header_body(fp: BinaryIO) -> str:
     >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x = 10; z = {1,{2,3}};'
 
+    >>> header = 'no pattern'
+    >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
+    Traceback (most recent call last):
+      ...
+    ValueError: Reached file end before header was closed
+
+    >>> header = 'header { x="}";}'
+    >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
+    'x="}";'
     """
     _read_until(fp, r"header\s*{")
     nested_level = 1
