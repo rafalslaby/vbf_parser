@@ -35,7 +35,7 @@ def extract_header_body(fp: BinaryIO) -> str:
     >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x=10;'
 
-    >>> header = 'header{\\n x = 10; z = {1,{2,3}};}'
+    >>> header = 'header{\\n x = 10; z = {1,{2,3}};\\n }'
     >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x = 10; z = {1,{2,3}};'
 

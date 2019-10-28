@@ -1,0 +1,12 @@
+version = 37
+
+header {
+    a = 0x12  ; // comment
+
+    b = "hello"; /*multi line comment
+    this is also commented
+    */
+    c=value;
+    list = {{1,2},{3,4}};
+
+}binary data
