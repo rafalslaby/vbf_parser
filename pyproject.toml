@@ -18,3 +18,5 @@ classifiers = [
     "Programming Language :: Python :: 3.8",
 ]
 requires-python = ">=3.6"
+
+# TODO: try poetry
