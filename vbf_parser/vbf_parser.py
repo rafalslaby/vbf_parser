@@ -60,10 +60,14 @@ def lex_unquoted_value(header: str) -> Tuple[str, str]:
     ('abc', '=10')
     >>> lex_unquoted_value(" a")
     ('', ' a')
+    >>> lex_unquoted_value("abc")
+    ('abc', '')
     """
     if header[0] in VBF_SYNTAX + WHITESPACE:
         return "", header
     match = re.search(rf"[\s{VBF_SYNTAX}]", header)
+    if not match:
+        return header, ""
     return header[: match.start()], header[match.start() :]
 
 
@@ -116,8 +120,10 @@ def _parse_array(tokens: List[str]) -> Tuple[Union[list, str], List[str]]:
     (['1', ['2', '3']], [';', 'a', 'b', 'c'])
     >>> _parse_array(list("1}"))
     (['1'], [])
+    >>> _parse_array(list(""))
+    ([], [])
     """
-    array = []
+    array: List[Union[list, str]] = []
     while tokens:
         token, *tokens = tokens
         if token == "}":
@@ -128,6 +134,7 @@ def _parse_array(tokens: List[str]) -> Tuple[Union[list, str], List[str]]:
         elif token != ",":
             array.append(token)
             assert tokens[0] == "}" or tokens[0] == ","
+    return array, tokens
 
 
 def parse_vbf_tokens(tokens: List[str]):
@@ -142,6 +149,7 @@ def parse_vbf_tokens(tokens: List[str]):
 
     """
     result = {}
+    value: Union[int, list, str]
     while tokens:
         name, equal_sign, *tokens = tokens
         assert equal_sign == "=", f"Syntax error: expected '=' got {equal_sign}; before: {''.join(tokens)}"
