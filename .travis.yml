@@ -5,8 +5,9 @@ python:
   - "3.8"
 install:
   - pip install -r requirements.txt
-  - pip install pytest coverage
+  - pip install pytest coverage mypy
 script:
   - coverage run -m pytest --doctest-modules
+  - mypy vbf_parser
 after_success:
   - bash <(curl -s https://codecov.io/bash)
