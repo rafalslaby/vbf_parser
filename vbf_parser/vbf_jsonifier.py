@@ -8,8 +8,16 @@ def _fix_missing_quotes(string: str) -> str:
     """
     >>> _fix_missing_quotes('identifier = value')
     '"identifier" = "value"'
+    >>> _fix_missing_quotes('x = 0x2f')
+    '"x" = 0x2f'
     """
-    return re.sub(r"([^\s={};,]+)", r'"\1"', string)
+
+    def quote_if_not_hex(match: Match) -> str:
+        if re.fullmatch(r"0x[a-fA-F0-9]+", match.group(0)):
+            return match.group(0)
+        return f'"{match.group(0)}"'
+
+    return re.sub(r"[^\s={};,]+", quote_if_not_hex, string)
 
 
 def _remove_asterisk_comments(string: str) -> str:
@@ -33,6 +41,7 @@ def _convert_all_hexes_to_ints(vbf_string: str) -> str:
     >>> _convert_all_hexes_to_ints('abc 0xff def 0XF')
     'abc 255 def 15'
     """
+
     def hex_match_to_int_str(match: Match) -> str:
         return str(int(match.group(0), base=16))
 
@@ -42,8 +51,8 @@ def _convert_all_hexes_to_ints(vbf_string: str) -> str:
 def _jsonify_vbf_part(vbf_string: str) -> str:
     jsonified = _remove_asterisk_comments(vbf_string)
     jsonified = _remove_slash_comments(jsonified)
-    jsonified = _convert_all_hexes_to_ints(jsonified)
     jsonified = _fix_missing_quotes(jsonified)
+    jsonified = _convert_all_hexes_to_ints(jsonified)
     for source, replacement in VBF_TO_JSON_REPLACEMENTS.items():
         jsonified = jsonified.replace(source, replacement)
     return jsonified
@@ -62,7 +71,7 @@ def jsonify_vbf_header(header: str) -> str:
     """
     >>> from json import loads
     >>> loads(jsonify_vbf_header('abc = 0xff; //comment \\n z = "a b"; /* multi\\nline*/ y = {1,{2,3}  };'))
-    {'abc': '255', 'z': 'a b', 'y': ['1', ['2', '3']]}
+    {'abc': 255, 'z': 'a b', 'y': ['1', ['2', '3']]}
     """
     json_string = "{"
     last_quote_end_index = 0
