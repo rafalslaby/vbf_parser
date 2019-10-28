@@ -4,7 +4,7 @@
 [![Python: 3.6+](https://img.shields.io/badge/python-3.6%2B-blue)](https://img.shields.io/badge/python-3.6%2B-blue)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Code quality: MyPy](https://img.shields.io/badge/code%20quality-mypy-informational)](https://github.com/python/mypy)
+[![Code quality: MyPy](https://img.shields.io/badge/static%20analysis-mypy-informational)](https://github.com/python/mypy)
 
 # VBF parser
 
