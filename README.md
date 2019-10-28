@@ -1,5 +1,5 @@
 [![Build Status](https://travis-ci.org/rafalslaby/vbf_parser.svg?branch=master)](https://travis-ci.org/rafalslaby/vbf_parser)
-
+[![codecov](https://codecov.io/gh/rafalslaby/vbf_parser/branch/master/graph/badge.svg)](https://codecov.io/gh/rafalslaby/vbf_parser)
 # VBF parser
 
 vbf-parser is a Python library for parsing VBF files.
