@@ -9,5 +9,6 @@ install:
 script:
   - coverage run -m pytest --doctest-modules
   - mypy vbf_parser
+  - black --check --diff vbf_parser
 after_success:
   - bash <(curl -s https://codecov.io/bash)
