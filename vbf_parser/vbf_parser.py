@@ -81,6 +81,8 @@ def lex_whitespace(header: str) -> Tuple[str, str]:
     """
     >>> lex_whitespace(" a")
     ('', 'a')
+    >>> lex_whitespace("a ")
+    ('', 'a ')
     """
     if not re.match(r"\s", header[0]):
         return "", header
