@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/rafalslaby/vbf_parser.svg?branch=master)](https://travis-ci.org/rafalslaby/vbf_parser)
 [![codecov](https://codecov.io/gh/rafalslaby/vbf_parser/branch/master/graph/badge.svg)](https://codecov.io/gh/rafalslaby/vbf_parser)
+[![PyPI](https://img.shields.io/pypi/v/vbf_parser)](https://pypi.org/project/vbf-parser/)
 [![Python: 3.6+](https://img.shields.io/badge/python-3.6%2B-blue)](https://img.shields.io/badge/python-3.6%2B-blue)
-![PyPI](https://img.shields.io/pypi/v/vbf_parser)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
 
 # VBF parser
