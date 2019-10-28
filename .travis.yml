@@ -6,9 +6,9 @@ python:
   - "3.8"
 install:
   - pip install -r requirements.txt
-  - pip install pytest coverage mypy black
+  - pip install pytest pytest-cov coverage mypy black
 script:
-  - coverage run -m pytest --doctest-modules
+  - pytest --cov=vbf_parser --doctest-modules
   - mypy vbf_parser
   - black --check --diff vbf_parser
 after_success:
