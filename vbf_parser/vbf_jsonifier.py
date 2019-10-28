@@ -1,5 +1,5 @@
 import re
-from typing import Generator, Match
+from typing import Generator, Match, Tuple
 
 VBF_TO_JSON_REPLACEMENTS = {";": ",", "{": "[", "}": "]", "=": ":"}
 
@@ -62,9 +62,32 @@ def _iter_quoted(str_: str) -> Generator[Match, None, None]:
     """
     >>> [match.group(0) for match in _iter_quoted('trash"str1" trash " str2"trash')]
     ['"str1"', '" str2"']
-
     """
     yield from re.finditer(r'"[^"]*"', str_)
+
+
+def _iter_unquoted_quoted_parts(str_: str) -> Generator[Tuple[str, str], None, None]:
+    """
+    >>> list(_iter_unquoted_quoted_parts('no"yes"no'))
+    [('no', '"yes"'), ('no', '')]
+    >>> list(_iter_unquoted_quoted_parts('"yes"no'))
+    [('', '"yes"'), ('no', '')]
+    >>> list(_iter_unquoted_quoted_parts('"yes"no"yes"'))
+    [('', '"yes"'), ('no', '"yes"')]
+    >>> list(_iter_unquoted_quoted_parts('"yes"'))
+    [('', '"yes"')]
+    >>> list(_iter_unquoted_quoted_parts('no'))
+    [('no', '')]
+    """
+    last_quote_end_index = 0
+    for quoted_match in _iter_quoted(str_):
+        unquoted_part = str_[last_quote_end_index : quoted_match.start()]
+        last_quote_end_index = quoted_match.end()
+        quoted_part = quoted_match.group(0)
+        yield unquoted_part, quoted_part
+    unquoted_part = str_[last_quote_end_index:]
+    if unquoted_part:
+        yield unquoted_part, ""
 
 
 def jsonify_vbf_header(header: str) -> str:
@@ -74,13 +97,7 @@ def jsonify_vbf_header(header: str) -> str:
     {'abc': 255, 'z': 'a b', 'y': ['1', ['2', '3']]}
     """
     json_string = "{"
-    last_quote_end_index = 0
-    for quoted_match in _iter_quoted(header):
-        unquoted_part = header[last_quote_end_index : quoted_match.start()]
-        jsonified = _jsonify_vbf_part(unquoted_part)
-        json_string += jsonified + quoted_match.group(0)
-        last_quote_end_index = quoted_match.end()
-    json_string += _jsonify_vbf_part(header[last_quote_end_index:])
-    json_string = json_string.rstrip()
+    for unquoted, quoted in _iter_unquoted_quoted_parts(header):
+        json_string += _jsonify_vbf_part(unquoted) + quoted
     assert json_string[-1] == ",", f"Expected ',' at the end; got {json_string[-1]}"
     return json_string[:-1] + "}"
