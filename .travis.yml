@@ -7,3 +7,5 @@ install:
   - pip install -r requirements.txt
 script:
   - pytest --doctest-modules
+env:
+  - CODECOV_TOKEN="64c90139-bdbd-49a3-802f-8e4dac1eaad1"
