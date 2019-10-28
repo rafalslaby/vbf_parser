@@ -12,17 +12,17 @@ def _read_until(fp: BinaryIO, pattern: Union[Pattern, str]) -> bool:
     True
     >>> file.read().decode(VBF_ENCODING)
     'spanish inquisition'
-
+    >>> file = io.BytesIO("no pattern".encode(VBF_ENCODING))
+    >>> _read_until(file,r"\\{")
+    False
     """
     text = ""
     while not re.search(pattern, text):
         c = fp.read(1).decode(VBF_ENCODING)
         if not c:
-            break
+            return False
         text += c
-    else:
-        return True
-    return False
+    return True
 
 
 def extract_header_body(fp: BinaryIO) -> str:
