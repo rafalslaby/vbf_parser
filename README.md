@@ -3,7 +3,8 @@
 [![PyPI](https://img.shields.io/pypi/v/vbf_parser)](https://pypi.org/project/vbf-parser/)
 [![Python: 3.6+](https://img.shields.io/badge/python-3.6%2B-blue)](https://img.shields.io/badge/python-3.6%2B-blue)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/ambv/black)
-
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+ 
 # VBF parser
 
 vbf-parser is a Python library for parsing VBF files.
