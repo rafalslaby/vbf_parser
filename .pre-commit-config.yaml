@@ -3,10 +3,12 @@ repos:
     rev: stable
     hooks:
       - id: black
-  - repo: https://github.com/timothycrosley/isort
-    rev: develop
+  - repo: https://github.com/pre-commit/mirrors-isort
+    rev: master
     hooks:
       - id: isort
+        additional_dependencies:
+          - toml
   - repo: https://github.com/pre-commit/mirrors-mypy
     rev: master
     hooks:
