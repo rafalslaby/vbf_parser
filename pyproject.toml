@@ -1,6 +1,9 @@
 [tool.black]
 line-length = 120
 
+[tool.isort]
+line_length=120
+
 [build-system]
 requires = ["flit"]
 build-backend = "flit.buildapi"
