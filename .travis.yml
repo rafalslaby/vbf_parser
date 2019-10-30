@@ -1,5 +1,8 @@
 language: python
-cache: pip
+cache:
+  pip: true
+  directories:
+    - /home/travis/.cache/pre-commit
 python:
   - "3.6"
   - "3.7"
