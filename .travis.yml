@@ -6,10 +6,9 @@ python:
   - "3.8"
 install:
   - pip install -r requirements.txt
-  - pip install pytest pytest-cov coverage mypy black
+  - pip install pytest pytest-cov coverage mypy pre-commit
 script:
   - pytest --cov=vbf_parser --doctest-modules
-  - mypy vbf_parser
-  - black --check --diff vbf_parser
+  - pre-commit run --all-files
 after_success:
   - bash <(curl -s https://codecov.io/bash)
