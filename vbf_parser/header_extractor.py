@@ -1,6 +1,6 @@
 import io
 import re
-from typing import Pattern, Union, BinaryIO
+from typing import BinaryIO, Pattern, Union
 
 VBF_ENCODING = "ascii"
 
