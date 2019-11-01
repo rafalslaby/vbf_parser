@@ -9,7 +9,13 @@ repos:
       - id: isort
         additional_dependencies:
           - toml
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: master
+  # use system python to avoid --ignore-missing-imports due to uninstalled packages
+  - repo: local
     hooks:
       - id: mypy
+        name: mypy
+        language: system
+        types: [python]
+        files:
+          ^vbf_parser/
+        entry: mypy
