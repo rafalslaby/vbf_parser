@@ -5,11 +5,11 @@ VBF_SYNTAX = "={};,"
 WHITESPACE = "\r\n\t\f\v "
 
 
-def lex_quoted(header: str) -> Tuple[str, str]:
+def _lex_quoted(header: str) -> Tuple[str, str]:
     """
-    >>> lex_quoted('"abc";a=10')
+    >>> _lex_quoted('"abc";a=10')
     ('"abc"', ';a=10')
-    >>> lex_quoted('a=10')
+    >>> _lex_quoted('a=10')
     ('', 'a=10')
     """
     if header[0] != '"':
@@ -18,13 +18,13 @@ def lex_quoted(header: str) -> Tuple[str, str]:
     return header[: end_quote_pos + 1], header[end_quote_pos + 1 :]
 
 
-def lex_unquoted_value(header: str) -> Tuple[str, str]:
+def _lex_unquoted_value(header: str) -> Tuple[str, str]:
     """
-    >>> lex_unquoted_value("abc=10")
+    >>> _lex_unquoted_value("abc=10")
     ('abc', '=10')
-    >>> lex_unquoted_value(" a")
+    >>> _lex_unquoted_value(" a")
     ('', ' a')
-    >>> lex_unquoted_value("abc")
+    >>> _lex_unquoted_value("abc")
     ('abc', '')
     """
     if header[0] in VBF_SYNTAX + WHITESPACE:
@@ -35,9 +35,9 @@ def lex_unquoted_value(header: str) -> Tuple[str, str]:
     return header[: match.start()], header[match.start() :]
 
 
-def lex_syntax(header: str) -> Tuple[str, str]:
+def _lex_syntax(header: str) -> Tuple[str, str]:
     """
-    >>> lex_syntax("=123")
+    >>> _lex_syntax("=123")
     ('=', '123')
     """
     if header[0] not in VBF_SYNTAX:
@@ -45,13 +45,13 @@ def lex_syntax(header: str) -> Tuple[str, str]:
     return header[0], header[1:]
 
 
-def lex_whitespace(header: str) -> Tuple[str, str]:
+def _lex_whitespace(header: str) -> Tuple[str, str]:
     """
-    >>> lex_whitespace(" \\n  a")
+    >>> _lex_whitespace(" \\n  a")
     ('', 'a')
-    >>> lex_whitespace(" abc")
+    >>> _lex_whitespace(" abc")
     ('', 'abc')
-    >>> lex_whitespace("a ")
+    >>> _lex_whitespace("a ")
     ('', 'a ')
     """
     whitespace_match = re.match(r"\s+", header)
@@ -60,11 +60,11 @@ def lex_whitespace(header: str) -> Tuple[str, str]:
     return "", header[whitespace_match.end() :]
 
 
-def lex_single_line_comment(header: str) -> Tuple[str, str]:
+def _lex_single_line_comment(header: str) -> Tuple[str, str]:
     """
-    >>> lex_single_line_comment("a=10")
+    >>> _lex_single_line_comment("a=10")
     ('', 'a=10')
-    >>> lex_single_line_comment("//comment\\nb=20")
+    >>> _lex_single_line_comment("//comment\\nb=20")
     ('', 'b=20')
     """
     if header[:2] != "//":
@@ -73,11 +73,11 @@ def lex_single_line_comment(header: str) -> Tuple[str, str]:
     return "", header[line_end_pos + 1 :]
 
 
-def lex_multi_line_comment(header: str) -> Tuple[str, str]:
+def _lex_multi_line_comment(header: str) -> Tuple[str, str]:
     """
-    >>> lex_multi_line_comment("a=10")
+    >>> _lex_multi_line_comment("a=10")
     ('', 'a=10')
-    >>> lex_multi_line_comment("/*multiline\\ncomment*/b=20")
+    >>> _lex_multi_line_comment("/*multiline\\ncomment*/b=20")
     ('', 'b=20')
     """
     if header[:2] != "/*":
@@ -99,12 +99,12 @@ def lex_vbf_header(header: str) -> List[str]:
     """
     tokens = []
     lexing_functions = [
-        lex_quoted,
-        lex_unquoted_value,
-        lex_syntax,
-        lex_whitespace,
-        lex_single_line_comment,
-        lex_multi_line_comment,
+        _lex_quoted,
+        _lex_unquoted_value,
+        _lex_syntax,
+        _lex_whitespace,
+        _lex_single_line_comment,
+        _lex_multi_line_comment,
     ]
     while header:
         for lex_func in lexing_functions:
