@@ -5,42 +5,6 @@ VBF_SYNTAX = "={};,"
 WHITESPACE = "\r\n\t\f\v "
 
 
-def lex_vbf_header_simple(header: str):
-    """
-    >>> lex_vbf_header_simple('x = "ab"')
-    ['x', '=', '"ab"']
-    >>> lex_vbf_header_simple('y={1,2,3}')
-    ['y', '=', '{', '1', ',', '2', ',', '3', '}']
-    >>> lex_vbf_header_simple('y={{1,2},3};  abc=   0x12;')
-    ['y', '=', '{', '{', '1', ',', '2', '}', ',', '3', '}', ';', 'abc', '=', '0x12', ';']
-    """
-    tokens = []
-    is_inside_quotes = False
-    token = ""
-    for c in header:
-        if not is_inside_quotes and c in WHITESPACE:
-            if token:
-                tokens.append(token)
-                token = ""
-        elif c == '"':
-            token += c
-            is_end_quote = is_inside_quotes
-            if is_end_quote:
-                tokens.append(token)
-                token = ""
-            is_inside_quotes = not is_inside_quotes
-        elif c in VBF_SYNTAX:
-            # flush current
-            if token:
-                tokens.append(token)
-                token = ""
-            tokens.append(c)
-        else:
-            token += c
-
-    return tokens
-
-
 def lex_quoted(header: str) -> Tuple[str, str]:
     """
     >>> lex_quoted('"abc";a=10')
