@@ -47,14 +47,17 @@ def lex_syntax(header: str) -> Tuple[str, str]:
 
 def lex_whitespace(header: str) -> Tuple[str, str]:
     """
-    >>> lex_whitespace(" a")
+    >>> lex_whitespace(" \\n  a")
     ('', 'a')
+    >>> lex_whitespace(" abc")
+    ('', 'abc')
     >>> lex_whitespace("a ")
     ('', 'a ')
     """
-    if not re.match(r"\s", header[0]):
+    whitespace_match = re.match(r"\s+", header)
+    if not whitespace_match:
         return "", header
-    return "", header[1:]
+    return "", header[whitespace_match.end() :]
 
 
 def lex_single_line_comment(header: str) -> Tuple[str, str]:
