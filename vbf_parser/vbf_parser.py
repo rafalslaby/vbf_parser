@@ -184,7 +184,8 @@ def parse_vbf_tokens(tokens: List[str]):
     >>> tokens = lex_vbf_header('abc = 0xff; //comment \\n z = "a b"; /* multi\\nline*/ y = {1,{2,3}  };')
     >>> parse_vbf_tokens(tokens)
     {'abc': 255, 'z': '"a b"', 'y': ['1', ['2', '3']]}
-     # TODO: fix quoted parsing
+
+    # TODO: fix quoted parsing
     """
     result = {}
     value: Union[int, list, str]
