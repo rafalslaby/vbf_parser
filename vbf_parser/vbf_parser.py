@@ -183,9 +183,7 @@ def parse_vbf_tokens(tokens: List[str]):
 
     >>> tokens = lex_vbf_header('abc = 0xff; //comment \\n z = "a b"; /* multi\\nline*/ y = {1,{2,3}  };')
     >>> parse_vbf_tokens(tokens)
-    {'abc': 255, 'z': '"a b"', 'y': ['1', ['2', '3']]}
-
-    # TODO: fix quoted parsing
+    {'abc': 255, 'z': 'a b', 'y': ['1', ['2', '3']]}
     """
     result = {}
     value: Union[int, list, str]
@@ -198,6 +196,8 @@ def parse_vbf_tokens(tokens: List[str]):
             value, semicolon, *tokens = tokens
             if value.startswith("0x"):
                 value = int(value, base=16)
+            elif re.match(r'"[^"]*"', value):
+                value = value[1:-1]
         assert semicolon == ";", f"Syntax error: expected ';' got {semicolon}; before: {''.join(tokens)}"
         result[name] = value
     return result
