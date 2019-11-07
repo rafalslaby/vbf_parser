@@ -13,6 +13,6 @@ install:
 script:
   - pytest --cov=vbf_parser --doctest-modules
   - pre-commit run --all-files
-  - bandit -r vbf_parser -l
+  - bandit -c .bandit.yml -r vbf_parser
 after_success:
   - bash <(curl -s https://codecov.io/bash)
