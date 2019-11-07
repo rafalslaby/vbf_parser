@@ -1,2 +1,3 @@
 skips:
   - B101 # assert_used TODO: figure out how to replace existing asserts
+  - B105 # hardcoded_password_string - quoting documentation "Note: this can be noisy and may generate false positives"
