@@ -9,9 +9,10 @@ python:
   - "3.8"
 install:
   - pip install -r requirements.txt
-  - pip install pytest pytest-cov coverage mypy pre-commit
+  - pip install pytest pytest-cov coverage mypy pre-commit bandit
 script:
   - pytest --cov=vbf_parser --doctest-modules
   - pre-commit run --all-files
+  - bandit -r vbf_parser -l
 after_success:
   - bash <(curl -s https://codecov.io/bash)

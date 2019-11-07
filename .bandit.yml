@@ -1,0 +1,2 @@
+skips:
+  - B101 # assert_used TODO: figure out how to replace existing asserts
