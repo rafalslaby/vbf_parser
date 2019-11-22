@@ -93,11 +93,12 @@ def _iter_unquoted_quoted_parts(str_: str) -> Generator[Tuple[str, str], None, N
 def jsonify_vbf_header(header: str) -> str:
     """
     >>> from json import loads
-    >>> loads(jsonify_vbf_header('abc = 0xff; //comment \\n z = "a b"; /* multi\\nline*/ y = {1,{2,3}  };'))
+    >>> loads(jsonify_vbf_header('abc = 0xff; //comment \\n z = "a b"; /* multi\\nline*/ y = {1,{2,3}  };\\n'))
     {'abc': 255, 'z': 'a b', 'y': ['1', ['2', '3']]}
     """
     json_string = "{"
     for unquoted, quoted in _iter_unquoted_quoted_parts(header):
         json_string += _jsonify_vbf_part(unquoted) + quoted
+    json_string = json_string.strip()
     assert json_string[-1] == ",", f"Expected ',' at the end; got {json_string[-1]}"
     return json_string[:-1] + "}"
