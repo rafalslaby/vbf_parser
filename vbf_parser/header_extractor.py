@@ -1,4 +1,4 @@
-import io
+import io  # noqa: F401
 import re
 from typing import BinaryIO, Pattern, Union
 
