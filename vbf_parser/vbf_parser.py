@@ -1,3 +1,7 @@
+"""
+Manual vbf parsing from scratch
+"""
+
 import re
 from typing import List, Tuple, Union
 

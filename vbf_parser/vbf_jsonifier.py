@@ -1,3 +1,6 @@
+"""
+Vbf jsonifier.
+"""
 import re
 from typing import Generator, Match, Tuple
 

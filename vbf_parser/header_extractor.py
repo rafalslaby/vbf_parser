@@ -1,3 +1,7 @@
+"""
+Helper module to safely extract header from vbf file
+"""
+
 import io  # noqa: F401
 import re
 from typing import BinaryIO, Pattern, Union
