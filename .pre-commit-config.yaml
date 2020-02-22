@@ -36,4 +36,5 @@ repos:
         language: python
         additional_dependencies: [xenon]
         types: [python]
+        pass_filenames: false
         entry: xenon -bC -aA vbf_parser/
