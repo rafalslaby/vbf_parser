@@ -133,7 +133,7 @@ def _parse_array(tokens: List[str]) -> Tuple[Union[list, str], List[str]]:
         token, *tokens = tokens
         if token == "}":
             return array, tokens
-        elif token == "{":
+        if token == "{":
             sub_array, tokens = _parse_array(tokens)
             array.append(sub_array)
         elif token != ",":

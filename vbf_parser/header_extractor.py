@@ -2,14 +2,14 @@
 Helper module to safely extract header from vbf file
 """
 
-import io  # noqa: F401
+import io  # noqa: F401 pylint: disable=unused-import
 import re
 from typing import BinaryIO, Pattern, Union
 
 VBF_ENCODING = "ascii"
 
 
-def _read_until(fp: BinaryIO, pattern: Union[Pattern, str]) -> bool:
+def _read_until(file_handle: BinaryIO, pattern: Union[Pattern, str]) -> bool:
     """
     >>> file = io.BytesIO("abc; header {spanish inquisition".encode(VBF_ENCODING))
     >>> _read_until(file, r'header\\s*{')
@@ -22,14 +22,14 @@ def _read_until(fp: BinaryIO, pattern: Union[Pattern, str]) -> bool:
     """
     text = ""
     while not re.search(pattern, text):
-        c = fp.read(1).decode(VBF_ENCODING)
-        if not c:
+        char = file_handle.read(1).decode(VBF_ENCODING)
+        if not char:
             return False
-        text += c
+        text += char
     return True
 
 
-def extract_header_body(fp: BinaryIO) -> str:
+def extract_header_body(file_handle: BinaryIO) -> str:
     """
     >>> header = 'trash;\\n header{\\n x=10;\\n} trash'
     >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
@@ -57,12 +57,12 @@ def extract_header_body(fp: BinaryIO) -> str:
     >>> extract_header_body(io.BytesIO(header.encode(VBF_ENCODING))).strip()
     'x="}";'
     """
-    _read_until(fp, r"header\s*{")
+    _read_until(file_handle, r"header\s*{")
     nested_level = 1
     header = []
     is_in_quotes = False
     while nested_level != 0:
-        char = fp.read(1).decode(VBF_ENCODING)
+        char = file_handle.read(1).decode(VBF_ENCODING)
         if char == "":
             raise ValueError("Reached file end before header was closed")
         header.append(char)
