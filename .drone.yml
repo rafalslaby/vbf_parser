@@ -3,7 +3,7 @@ name: default
 
 steps:
 - name: test
-  image: python
+  image: python:3.7
   commands:
   - pip install -r requirements.txt
   - pip install pytest pytest-cov coverage mypy pre-commit bandit
