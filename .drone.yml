@@ -1,0 +1,12 @@
+kind: pipeline
+name: default
+
+steps:
+- name: test
+  image: python
+  commands:
+  - pip install -r requirements.txt
+  - pip install pytest pytest-cov coverage mypy pre-commit bandit
+  - pytest --cov=vbf_parser --doctest-modules
+  - pre-commit run --all-files
+  - bandit -c .bandit.yml -r vbf_parser
